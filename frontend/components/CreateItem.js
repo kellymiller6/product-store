@@ -38,6 +38,10 @@ class CreateItem extends Component {
     }
     render() {
         return (
+            <Mutation mutation={CREATE_ITEM_MUTATION} variables={this.state}>
+                {(createItem, {loading, error}) => (
+
+              
           <Form onSubmit={(e) => {
               e.preventDefault()
           }}
@@ -81,6 +85,8 @@ class CreateItem extends Component {
                   <button type="submit">Submit</button>
               </fieldset>
           </Form>
+            )}
+            </Mutation>
         );
     }
 }
