@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
+import Router from 'next/router';
 import Form from './styles/Form';
-import formatMoney from '../lib/formatMoney'
+import formatMoney from '../lib/formatMoney';
+import ErrorMessages from './ErrorMessage';
 
 const CREATE_ITEM_MUTATION = gql`
     mutation CREATE_ITEM_MUTATION (
@@ -19,7 +21,9 @@ const CREATE_ITEM_MUTATION = gql`
             price: $price
             image: $image
             largeImage: $largeImage
-        )
+        ){
+            id
+        }
     }
 `;
 
@@ -42,11 +46,17 @@ class CreateItem extends Component {
                 {(createItem, {loading, error}) => (
 
               
-          <Form onSubmit={(e) => {
-              e.preventDefault()
+          <Form onSubmit={async e => {
+              e.preventDefault();
+              const res = await createItem();
+              Router.push({
+                  pathname: '/item',
+                  query: { id: res.data.createItem.id}
+              })
           }}
           >
-              <fieldset>
+          <ErrorMessages error={error} />
+              <fieldset disabled={loading} aria-busy={loading}>
                   <label htmlFor="title">
                     Title
                     <input 
