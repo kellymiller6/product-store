@@ -50,6 +50,18 @@ const Mutations = {
       maxAge: 1000 * 60 * 24 * 365
     });
     return user;
+  },
+  async signin(parent, { email, password }, ctx, info ){
+    const user = await ctx.db.query.user({ where: { email }});
+    if(!user) {
+      throw new Error(`No such user found for eamil ${email}`);
+    }
+    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+    ctx.reponse.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365
+    });
+    return user;
   }
 };
 
