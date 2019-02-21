@@ -57,7 +57,7 @@ const Mutations = {
       throw new Error(`No such user found for eamil ${email}`);
     }
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
-    ctx.reponse.cookie('token', token, {
+    ctx.response.cookie('token', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 365
     });
