@@ -3,16 +3,20 @@ import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import Form from "./styles/Form";
 import Error from "./ErrorMessage";
-import { CURRENT_USER_QUERY } from './User';
+import { CURRENT_USER_QUERY } from "./User";
 
 const SIGNUP_MUTATION = gql`
-    mutation SIGNUP_MUTATION($email: String!, $name: String!, $password: String!){
-        signup(email: $email, name: $name, password: $password){
-            id
-            email
-            name
-        }
+  mutation SIGNUP_MUTATION(
+    $email: String!
+    $name: String!
+    $password: String!
+  ) {
+    signup(email: $email, name: $name, password: $password) {
+      id
+      email
+      name
     }
+  }
 `;
 
 class Signup extends Component {
@@ -27,14 +31,21 @@ class Signup extends Component {
   };
   render() {
     return (
-      <Mutation mutation={SIGNUP_MUTATION} variables={this.state}  refetchQueries={[{ query: CURRENT_USER_QUERY }]}>
+      <Mutation
+        mutation={SIGNUP_MUTATION}
+        variables={this.state}
+        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+      >
         {(signup, { error, loading }) => {
           return (
-            <Form method="post" onSubmit={async (e) => {
+            <Form
+              method="post"
+              onSubmit={async e => {
                 e.preventDefault();
-                const res = await signup();
-                this.setState({ name: '', email: '', password: ''})
-            }}>
+                await signup();
+                this.setState({ name: "", email: "", password: "" });
+              }}
+            >
               <fieldset disabled={loading} aria-busy={loading}>
                 <h2>Sign Up for an Account</h2>
                 <Error error={error} />
